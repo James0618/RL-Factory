@@ -26,12 +26,18 @@ We’ll keep a fast release cycle to quickly deliver and polish the upcoming fea
   + **Environment decouple**: define your tool-use envinroment easily (tools setup and reward function definition)
   + **Qwen3 Model support**: quickly train your agent using Qwen3 (much better than Qwen2.5 in tool-call)
   + **Efficient training**: 2x faster than existing frameworks for rapid model iteration (mainly through async tool-use)
-+ **Version 0.2** (within 2 weeks) We are looking forward to more people participating in the development and construction together, to create a great Agenetic Training community. Please feel free to contact us.
-  - [x] **WebUI**: build a WebUI for data processing, tool & environment definition, training configuration, and project management [#2](https://github.com/Simple-Efficient/RL-Factory/issues/2)
-  - [ ] **More efficient training**: support the AsyncLLMEngine for more efficient rollout and User Simulation (for multi-turn user interaction training) [#4](https://github.com/Simple-Efficient/RL-Factory/issues/4)
-  - [x] **More models**: test more models (such as Deepseek, Llama, etc.) and add corresponding support configurations [#5](https://github.com/Simple-Efficient/RL-Factory/issues/5)
-  - [x] **Process Reward**: use process reward to better guide the tool-call behavior of your model [#6](https://github.com/Simple-Efficient/RL-Factory/issues/6)
-  - [ ] **More applications**: help create more demos (such as [TravelPlanner](https://github.com/OSU-NLP-Group/TravelPlanner)) to adapt to more benchmarks
++ **Version 0.2** We are looking forward to more people participating in the development and construction together, to create a great Agenetic Training community. Please feel free to contact us.
+  + **WebUI**: build a WebUI for data processing, tool & environment definition, training configuration, and project management [#2](https://github.com/Simple-Efficient/RL-Factory/issues/2)
+  + **More efficient training**: support the AsyncLLMEngine for more efficient rollout [#4](https://github.com/Simple-Efficient/RL-Factory/issues/4)
+  + **More models**: test more models (such as Deepseek, Llama, etc.) and add corresponding support configurations [#5](https://github.com/Simple-Efficient/RL-Factory/issues/5)
+  + **Process Reward**: use process reward to better guide the tool-call behavior of your model [#6](https://github.com/Simple-Efficient/RL-Factory/issues/6)
+  + **More applications**: help create more demos (such as [TravelPlanner](https://github.com/OSU-NLP-Group/TravelPlanner)) to adapt to more benchmarks
+  + **Multimodal agentic learning**: support multimodal (image) agent training in terms of functionality [#66](https://github.com/Simple-Efficient/RL-Factory/issues/66)
+  + **Android Environment**: added Android OS environment support [#38](https://github.com/Simple-Efficient/RL-Factory/pull/38)
+  + **Tools cache**: cached tool invocation results to enhance post-processing efficiency [#57](https://github.com/Simple-Efficient/RL-Factory/pull/57)
+  + **Handy evaluation**: added main_eval.sh for evaluation utility [#36](https://github.com/Simple-Efficient/RL-Factory/pull/36)
+  + **Upgrade to VeRL-0.5**: Upgraded to VeRL-0.5 with maximal component decoupling [update/verl_0_5](https://github.com/Simple-Efficient/RL-Factory/tree/update/verl_0_5)
+  + **Add MS-SWIFT-3.7 to RL-Factory**: Added the support of MS-SWIFT-3.7 to make it more convenient for individual developers [#95](https://github.com/Simple-Efficient/RL-Factory/pull/95)
 
 ## Our Framework Design
 Our goal is to enable users to focus on reward logic and tool setup for fast agentic learning with minimal code, while hardcore developers could focus on improving training efficiency and model performance. 
@@ -66,7 +72,7 @@ For **future progression**, we will continue to prioritize **"easy"** and **"eff
   pip3 install accelerate bitsandbytes datasets deepspeed==0.16.4 einops flash-attn==2.7.0.post2 isort jsonlines loralib optimum packaging peft pynvml>=12.0.0 ray[default]==2.46.0 tensorboard torch==2.6.0 torchmetrics tqdm transformers==4.51.3 transformers_stream_generator wandb wheel
   pip3 install vllm==0.8.5      # Mainly for Qwen3 model support
   pip3 install "qwen-agent[code_interpreter]"
-  pip3 install llama_index bs4 pymilvus infinity_client codetiming tensordict==0.6 omegaconf torchdata==0.10.0 hydra-core easydict dill python-multipart mcp
+  pip3 install llama_index bs4 pymilvus infinity_client codetiming tensordict==0.6 omegaconf torchdata==0.10.0 hydra-core easydict dill python-multipart mcp==1.9.3
   pip3 install -e . --no-deps
   pip3 install faiss-gpu-cu12   # Optional, needed for end-to-end search model training with rag_server
   pip3 install nvidia-cublas-cu12==12.4.5.8  # Optional, needed while encountering ray worker died issue during training
@@ -80,6 +86,11 @@ For **future progression**, we will continue to prioritize **"easy"** and **"eff
   ```bash
   # Before running, modify MODEL_PATH, REWARD_MODEL_PATH, and several actor_rollout_ref.env parameters as needed
   bash main_grpo.sh
+  ```
+- **Evaluate or Infer Command**
+  ```bash
+  # Before running, modify MODEL_PATH, REWARD_MODEL_PATH, and several data and trainer parameters as needed
+  bash main_eval.sh
   ```
 
 
@@ -114,9 +125,9 @@ We welcome all users and developers to contribute code to RLFactory. If you have
 
 1. Submit an issue directly on GitHub.  
 2. Contact us via email at chaijiajun@meituan.com or gjyin@outlook.com.
-3. Join our WeChat group and become a pioneer in Agent training!
+3. Join our WeChat group(preferred) and become a pioneer in Agent training!
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/398696f3-52e5-4ecf-add1-224afcd073e2" alt="Description" style="width:200px; height:auto;"/>
+  <img src="https://github.com/user-attachments/assets/773a834d-d0c6-4454-9c5d-3e421ca9ad05" alt="Description" style="width:200px; height:auto;"/>
   <img src="https://github.com/user-attachments/assets/e59f1a14-faee-4ec8-97cd-5e90ff34a43d" alt="Description" style="width:200px; height:auto;"/>
 </div>
 

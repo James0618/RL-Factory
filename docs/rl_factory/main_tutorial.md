@@ -13,6 +13,7 @@
         cat $save_path/part_* > $save_path/e5_Flat.index
         gzip -d $save_path/wiki-18.jsonl.gz
         ```
+        
     + **Process the dataset**
         ```bash
         python rag_server/data_process/nq_search.py
@@ -38,7 +39,7 @@
     ```json
     [
         {'mcpServers': {
-            'time': {
+            'search': {
                 'command': 'python',
                 'args': ['envs/tools/search.py']
             }
@@ -126,7 +127,7 @@
     ...
     actor_rollout_ref.env.name=search\
     actor_rollout_ref.env.tool_manager=qwen3\
-    actor_rollout_ref.env.enable_thinking=True\
+    actor_rollout_ref.env.enable_thinking=False\
     actor_rollout_ref.env.config_path=/the/path/to/mcp_tools.pydata\
     ...
     ```
@@ -140,4 +141,25 @@
 + Use Tensorboard or other verl-supported methods to view experiment curves
     ```bash
     tensorboard --logdir=./
+    ```
+
+## After Training - Start Evaluate！ 
+
++ Simply adjust main_eval.sh based on main_grpo.sh
+    ```bash
+    set -e -x
+
+    export MODEL_PATH=/the/path/to/model
+    export REWARD_MODEL_PATH=/the/path/to/reward_rollout_model
+
+    python3 -m verl.trainer.main_evaluate\
+    ...
+    data.val_files=path/to/evaluation.parquet\
+    data.val_batch_size=1024\
+    actor_rollout_ref.rollout.val_kwargs.temperature=0\
+    actor_rollout_ref.rollout.val_kwargs.top_k=-1\
+    actor_rollout_ref.rollout.val_kwargs.top_p=1\
+    trainer.val_only=True\
+    trainer.default_local_dir=path_for_results\
+    ...
     ```

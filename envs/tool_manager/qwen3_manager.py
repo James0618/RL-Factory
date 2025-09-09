@@ -34,7 +34,6 @@ class QwenManager(ToolManager):
         if isinstance(verl_config, dict):
             verl_config = OmegaConf.create(verl_config)
         super().__init__(verl_config)
-        self.functions = []
         self.generate_cfg = {
             'fncall_prompt_type': 'nous',
             'function_choice': 'auto',  # 注释掉这行
@@ -165,12 +164,12 @@ class QwenManager(ToolManager):
 {}""".format(tool["name"], args, str(e))
                 elif type(args) is str:
                     # Json decode error: xxx
-                    result = args
+                    result = 'parse json failed, argument is: {}'.format(args)
                 else:
                     result = 'Unexpected type of args: {} (args: {})'.format(type(args), args)
             else:
                 if tool['name'] == '<empty>':
-                    result = args
+                    result = 'toolname is empty, argument is: '.format(args)
                 else:
                     result = "# Failed to find the tool {} in the tool map".format(tool['name'])
 
@@ -192,39 +191,9 @@ class QwenManager(ToolManager):
             raise ValueError('Unexpected action: {}'.format(action))
 
         return results
-    
-    def _call_tool(self, tool_name: str, tool_args: Union[str, dict] = '{}', **kwargs) -> Union[str, List[ContentItem]]:
-        """The interface of calling tools for the agent.
-
-        Args:
-            tool_name: The name of one tool.
-            tool_args: Model generated or user given tool parameters.
-
-        Returns:
-            The output of tools.
-        """
-        if tool_name not in self.tool_map:
-            return f'Tool {tool_name} does not exists.'
-        tool = self.get_tool(tool_name)
-        try:
-            tool_result = tool.call(tool_args, **kwargs)
-        except (ToolServiceError, DocParserError) as ex:
-            raise ex
-        except Exception as ex:
-            exception_type = type(ex).__name__
-            exception_message = str(ex)
-            traceback_info = ''.join(traceback.format_tb(ex.__traceback__))
-            error_message = f'An error occurred when calling tool `{tool_name}`:\n' \
-                            f'{exception_type}: {exception_message}\n' \
-                            f'Traceback:\n{traceback_info}'
-            return error_message
-
-        if isinstance(tool_result, str):
-            return tool_result
-        else:
-            return json.dumps(tool_result, ensure_ascii=False, indent=4)
 
     def _init_tool(self, tool: Union[str, BaseTool]):
+        print(f'tool: {tool}')
         if isinstance(tool, BaseTool):
             tool_name = tool.name
             self.tool_map[tool_name] = tool
@@ -243,6 +212,7 @@ class QwenManager(ToolManager):
             for tool in tools:
                 tool_name = tool.name
                 self.tool_map[tool_name] = tool
+                print(f'register tool: {tool_name} --> {tool}')
         else:
             if isinstance(tool, dict):
                 tool_name = tool['name']
@@ -270,6 +240,7 @@ class QwenManager(ToolManager):
             # if temp_action is 'answer', temp_tool_list is the answer
             # else, temp_tool_list is the list of the 'Tool' instances
             actions.append(temp_action)
+            temp_tool_list = self.full_name(temp_tool_list)
             tools.append(temp_tool_list)
 
         # 使用asyncio.run同步运行异步函数
